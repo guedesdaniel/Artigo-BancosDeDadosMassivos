@@ -1,0 +1,27 @@
+
+# 10 Viagens mais Caras
+SELECT id_viagem, SUM(valor) as valor FROM viagens.pagamentos GROUP BY id_viagem ORDER BY valor DESC LIMIT 10 ;
+
+# Viagens internacionais
+SELECT COUNT(*) AS viagens_internacionais FROM (SELECT id_viagem FROM viagens.trechos 
+WHERE origem_pais = 'Brasil' AND destino_pais != 'Brasil' GROUP BY id_viagem) id;
+
+#Viagens nacionais
+SELECT COUNT(*) AS viagens_internacionais FROM (SELECT id_viagem FROM viagens.trechos 
+WHERE origem_pais = 'Brasil' AND destino_pais = 'Brasil' GROUP BY id_viagem) id;
+
+#Número de viagens por Órgão Superior
+SELECT nome_org_superior, COUNT(DISTINCT id_viagem) AS num_viagens 
+FROM viagens.pagamentos WHERE tipo_pag = 'PASSAGEM' 
+GROUP BY nome_org_superior ORDER BY num_viagens DESC
+
+#Valor gasto em viagens por Órgao Superior
+SELECT nome_org_superior, SUM(valor) AS valor_gasto 
+FROM viagens.pagamentos GROUP BY nome_org_superior ORDER BY valor_gasto DESC
+
+
+#10 Viagens mais caras com Destino - JOIN ENTRE TABELAS
+
+SELECT p.id_viagem, t.origem_pais, t.destino_pais, valor FROM (SELECT id_viagem, SUM(valor) as valor FROM viagens.pagamentos GROUP BY id_viagem ORDER BY valor DESC LIMIT 15) p LEFT OUTER JOIN viagens.trechos t
+ON p.id_viagem = t.id_viagem
+ORDER BY valor DESC LIMIT 15

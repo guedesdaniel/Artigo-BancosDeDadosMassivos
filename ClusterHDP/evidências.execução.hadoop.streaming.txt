@@ -1,0 +1,628 @@
+
+[root@sandbox-hdp data]# time hadoop fs -cat /tmp/data/2021_Pagamento.csv | ./mapper.py | sort | ./reducer.py | sort -k 2 > pgtos_total_por_orgao.txt
+
+real	0m9.505s
+user	0m7.041s
+sys	0m4.441s
+[root@sandbox-hdp data]# cat pgtos_total_por_orgao.txt
+Sigiloso	185819882.8
+Banco Central do Brasil - Orçamento Fiscal e Seguridade Social	472751.99
+Ministério da Agricultura, Pecuária e Abastecimento	24105483.58
+Ministério da Cidadania	3355710.54
+Ministério da Ciência, Tecnologia, Inovações e Comunicações	6606484.13
+Ministério da Defesa	147308118.36
+Ministério da Economia	21396966.46
+Ministério da Educação	33860936.63
+Ministério da Infraestrutura	14728593.25
+Ministério da Justiça e Segurança Pública	220187849.96
+Ministério da Mulher, Família e Direitos Humanos	3155448.67
+Presidência da República	17874343.55
+Ministério da Saúde	21368277.13
+Controladoria-Geral da União	1126679.2
+Advocacia-Geral da União	1295267.02
+Ministério das Comunicações	2828839.35
+Ministério das Relações Exteriores	18313205.88
+Ministério de Minas e Energia	7997202.02
+Ministério do Desenvolvimento Regional	5756523.5
+Ministério do Meio Ambiente	27203302.59
+Ministério do Trabalho	24884493.03
+Ministério do Turismo	3091130.01
+Sem informação	20856.28
+
+
+
+
+
+[root@sandbox-hdp data]# time hadoop jar /usr/hdp/3.0.1.0-187/hadoop-mapreduce/hadoop-streaming-3.1.1.3.0.1.0-187.jar -input /tmp/data/2021_Pagamento.csv -output /tmp/data/pagtos_por_orgao -mapper mapper.py -reducer reducer.py -file mapper.py -file reducer.py
+22/07/26 13:39:22 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
+packageJobJar: [mapper.py, reducer.py] [/usr/hdp/3.0.1.0-187/hadoop-mapreduce/hadoop-streaming-3.1.1.3.0.1.0-187.jar] /tmp/streamjob763462742450961287.jar tmpDir=null
+22/07/26 13:39:23 INFO client.RMProxy: Connecting to ResourceManager at sandbox-hdp.hortonworks.com/172.18.0.2:8050
+22/07/26 13:39:23 INFO client.AHSProxy: Connecting to Application History server at sandbox-hdp.hortonworks.com/172.18.0.2:10200
+22/07/26 13:39:23 INFO client.RMProxy: Connecting to ResourceManager at sandbox-hdp.hortonworks.com/172.18.0.2:8050
+22/07/26 13:39:23 INFO client.AHSProxy: Connecting to Application History server at sandbox-hdp.hortonworks.com/172.18.0.2:10200
+22/07/26 13:39:23 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /user/root/.staging/job_1658775670550_0006
+22/07/26 13:39:24 INFO mapred.FileInputFormat: Total input files to process : 1
+22/07/26 13:39:25 INFO mapreduce.JobSubmitter: number of splits:2
+22/07/26 13:39:26 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1658775670550_0006
+22/07/26 13:39:26 INFO mapreduce.JobSubmitter: Executing with tokens: []
+22/07/26 13:39:26 INFO conf.Configuration: found resource resource-types.xml at file:/etc/hadoop/3.0.1.0-187/0/resource-types.xml
+22/07/26 13:39:26 INFO impl.YarnClientImpl: Submitted application application_1658775670550_0006
+22/07/26 13:39:26 INFO mapreduce.Job: The url to track the job: http://sandbox-hdp.hortonworks.com:8088/proxy/application_1658775670550_0006/
+22/07/26 13:39:26 INFO mapreduce.Job: Running job: job_1658775670550_0006
+22/07/26 13:39:39 INFO mapreduce.Job: Job job_1658775670550_0006 running in uber mode : false
+22/07/26 13:39:39 INFO mapreduce.Job:  map 0% reduce 0%
+22/07/26 13:40:02 INFO mapreduce.Job:  map 11% reduce 0%
+22/07/26 13:40:06 INFO mapreduce.Job:  map 81% reduce 0%
+22/07/26 13:40:07 INFO mapreduce.Job:  map 100% reduce 0%
+22/07/26 13:40:17 INFO mapreduce.Job:  map 100% reduce 100%
+22/07/26 13:40:18 INFO mapreduce.Job: Job job_1658775670550_0006 completed successfully
+22/07/26 13:40:18 INFO mapreduce.Job: Counters: 53
+	File System Counters
+		FILE: Number of bytes read=24504435
+		FILE: Number of bytes written=49723649
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=122886744
+		HDFS: Number of bytes written=1017
+		HDFS: Number of read operations=11
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters 
+		Launched map tasks=2
+		Launched reduce tasks=1
+		Data-local map tasks=2
+		Total time spent by all maps in occupied slots (ms)=195532
+		Total time spent by all reduces in occupied slots (ms)=32112
+		Total time spent by all map tasks (ms)=48883
+		Total time spent by all reduce tasks (ms)=8028
+		Total vcore-milliseconds taken by all map tasks=48883
+		Total vcore-milliseconds taken by all reduce tasks=8028
+		Total megabyte-milliseconds taken by all map tasks=50056192
+		Total megabyte-milliseconds taken by all reduce tasks=8220672
+	Map-Reduce Framework
+		Map input records=695346
+		Map output records=695345
+		Map output bytes=23113739
+		Map output materialized bytes=24504441
+		Input split bytes=238
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=23
+		Reduce shuffle bytes=24504441
+		Reduce input records=695345
+		Reduce output records=23
+		Spilled Records=1390690
+		Shuffled Maps =2
+		Failed Shuffles=0
+		Merged Map outputs=2
+		GC time elapsed (ms)=555
+		CPU time spent (ms)=15670
+		Physical memory (bytes) snapshot=1262379008
+		Virtual memory (bytes) snapshot=8335556608
+		Total committed heap usage (bytes)=1047527424
+		Peak Map Physical memory (bytes)=781451264
+		Peak Map Virtual memory (bytes)=2874249216
+		Peak Reduce Physical memory (bytes)=214671360
+		Peak Reduce Virtual memory (bytes)=2650845184
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=122886506
+	File Output Format Counters 
+		Bytes Written=1017
+22/07/26 13:40:18 INFO streaming.StreamJob: Output directory: /tmp/data/pagtos_por_orgao.txt
+
+real	0m57.774s
+user	0m7.509s
+sys	0m1.435s
+[root@sandbox-hdp data]# 
+
+
+
+
+[root@sandbox-hdp data]# time hadoop fs -cat /tmp/data/2021_Pagamento.csv | ./mapper.2.py | sort | ./reducer.2.py | sort -k 2 > nr_viagens_por_orgao.txt
+
+real	0m7.012s
+user	0m5.130s
+sys	0m4.164s
+[root@sandbox-hdp data]# 
+[root@sandbox-hdp data]# cat nr_viagens_por_orgao.txt
+Sigiloso	158450.0
+Banco Central do Brasil - Orçamento Fiscal e Seguridade Social	229.0
+Ministério da Agricultura, Pecuária e Abastecimento	30537.0
+Ministério da Cidadania	2735.0
+Ministério da Ciência, Tecnologia, Inovações e Comunicações	4250.0
+Ministério da Defesa	159885.0
+Ministério da Economia	31440.0
+Ministério da Educação	46159.0
+Ministério da Infraestrutura	17966.0
+Ministério da Justiça e Segurança Pública	118734.0
+Ministério da Mulher, Família e Direitos Humanos	2709.0
+Presidência da República	16465.0
+Ministério da Saúde	27219.0
+Controladoria-Geral da União	1179.0
+Advocacia-Geral da União	1436.0
+Ministério das Comunicações	2390.0
+Ministério das Relações Exteriores	3559.0
+Ministério de Minas e Energia	6913.0
+Ministério do Desenvolvimento Regional	6875.0
+Ministério do Meio Ambiente	24905.0
+Ministério do Trabalho	28199.0
+Ministério do Turismo	3095.0
+Sem informação	16.0
+[root@sandbox-hdp data]# 
+
+
+[root@sandbox-hdp data]# 
+[root@sandbox-hdp data]# time hadoop jar /usr/hdp/3.0.1.0-187/hadoop-mapreduce/hadoop-streaming-3.1.1.3.0.1.0-187.jar \
+>   -input /tmp/data/2021_Pagamento.csv \
+>   -output /tmp/data/nr_viagens_por_orgao \
+>   -mapper mapper.2.py \
+>   -reducer reducer.2.py \
+>   -file mapper.2.py \
+>   -file reducer.2.py
+22/07/28 03:44:53 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
+packageJobJar: [mapper.2.py, reducer.2.py] [/usr/hdp/3.0.1.0-187/hadoop-mapreduce/hadoop-streaming-3.1.1.3.0.1.0-187.jar] /tmp/streamjob707081966856532358.jar tmpDir=null
+22/07/28 03:44:54 INFO client.RMProxy: Connecting to ResourceManager at sandbox-hdp.hortonworks.com/172.18.0.2:8050
+22/07/28 03:44:55 INFO client.AHSProxy: Connecting to Application History server at sandbox-hdp.hortonworks.com/172.18.0.2:10200
+22/07/28 03:44:55 INFO client.RMProxy: Connecting to ResourceManager at sandbox-hdp.hortonworks.com/172.18.0.2:8050
+22/07/28 03:44:55 INFO client.AHSProxy: Connecting to Application History server at sandbox-hdp.hortonworks.com/172.18.0.2:10200
+22/07/28 03:44:55 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /user/root/.staging/job_1658966746810_0004
+22/07/28 03:44:56 INFO mapred.FileInputFormat: Total input files to process : 1
+22/07/28 03:44:57 INFO mapreduce.JobSubmitter: number of splits:2
+22/07/28 03:44:58 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1658966746810_0004
+22/07/28 03:44:58 INFO mapreduce.JobSubmitter: Executing with tokens: []
+22/07/28 03:44:58 INFO conf.Configuration: found resource resource-types.xml at file:/etc/hadoop/3.0.1.0-187/0/resource-types.xml
+22/07/28 03:44:58 INFO impl.YarnClientImpl: Submitted application application_1658966746810_0004
+22/07/28 03:44:58 INFO mapreduce.Job: The url to track the job: http://sandbox-hdp.hortonworks.com:8088/proxy/application_1658966746810_0004/
+22/07/28 03:44:58 INFO mapreduce.Job: Running job: job_1658966746810_0004
+22/07/28 03:45:07 INFO mapreduce.Job: Job job_1658966746810_0004 running in uber mode : false
+22/07/28 03:45:07 INFO mapreduce.Job:  map 0% reduce 0%
+22/07/28 03:45:19 INFO mapreduce.Job:  map 82% reduce 0%
+22/07/28 03:45:20 INFO mapreduce.Job:  map 100% reduce 0%
+22/07/28 03:45:29 INFO mapreduce.Job:  map 100% reduce 100%
+22/07/28 03:45:30 INFO mapreduce.Job: Job job_1658966746810_0004 completed successfully
+22/07/28 03:45:31 INFO mapreduce.Job: Counters: 53
+	File System Counters
+		FILE: Number of bytes read=24504435
+		FILE: Number of bytes written=49723685
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=122886744
+		HDFS: Number of bytes written=927
+		HDFS: Number of read operations=11
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters 
+		Launched map tasks=2
+		Launched reduce tasks=1
+		Data-local map tasks=2
+		Total time spent by all maps in occupied slots (ms)=82904
+		Total time spent by all reduces in occupied slots (ms)=26420
+		Total time spent by all map tasks (ms)=20726
+		Total time spent by all reduce tasks (ms)=6605
+		Total vcore-milliseconds taken by all map tasks=20726
+		Total vcore-milliseconds taken by all reduce tasks=6605
+		Total megabyte-milliseconds taken by all map tasks=21223424
+		Total megabyte-milliseconds taken by all reduce tasks=6763520
+	Map-Reduce Framework
+		Map input records=695346
+		Map output records=695345
+		Map output bytes=23113739
+		Map output materialized bytes=24504441
+		Input split bytes=238
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=23
+		Reduce shuffle bytes=24504441
+		Reduce input records=695345
+		Reduce output records=23
+		Spilled Records=1390690
+		Shuffled Maps =2
+		Failed Shuffles=0
+		Merged Map outputs=2
+		GC time elapsed (ms)=528
+		CPU time spent (ms)=13430
+		Physical memory (bytes) snapshot=1768353792
+		Virtual memory (bytes) snapshot=8329187328
+		Total committed heap usage (bytes)=1574961152
+		Peak Map Physical memory (bytes)=784203776
+		Peak Map Virtual memory (bytes)=2871808000
+		Peak Reduce Physical memory (bytes)=210677760
+		Peak Reduce Virtual memory (bytes)=2649403392
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=122886506
+	File Output Format Counters 
+		Bytes Written=927
+22/07/28 03:45:31 INFO streaming.StreamJob: Output directory: /tmp/data/nr_viagens_por_orgao
+
+real	0m39.225s
+user	0m7.591s
+sys	0m0.925s
+[root@sandbox-hdp data]# 
+
+
+
+
+
+
+
+[root@sandbox-hdp ~]# 
+[root@sandbox-hdp ~]# hive -e "SELECT id_viagem,sum(valor) as valor_viagem FROM bdm.2021_passagem GROUP BY id_viagem ORDER BY sum(valor) DESC LIMIT 10"
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/hdp/3.0.1.0-187/hive/lib/log4j-slf4j-impl-2.10.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/hdp/3.0.1.0-187/hadoop/lib/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+Connecting to jdbc:hive2://sandbox-hdp.hortonworks.com:2181/default;password=hive;serviceDiscoveryMode=zooKeeper;user=hive;zooKeeperNamespace=hiveserver2
+22/07/28 04:35:08 [main]: INFO jdbc.HiveConnection: Connected to sandbox-hdp.hortonworks.com:10000
+Connected to: Apache Hive (version 3.1.0.3.0.1.0-187)
+Driver: Hive JDBC (version 3.1.0.3.0.1.0-187)
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+INFO  : Compiling command(queryId=hive_20220728043509_fc2c0d91-bf9a-4452-98c3-b6d4f7ddf176): SELECT id_viagem,sum(valor) as valor_viagem FROM bdm.2021_passagem GROUP BY id_viagem ORDER BY sum(valor) DESC LIMIT 10
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:id_viagem, type:int, comment:null), FieldSchema(name:valor_viagem, type:double, comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20220728043509_fc2c0d91-bf9a-4452-98c3-b6d4f7ddf176); Time taken: 0.408 seconds
+INFO  : Executing command(queryId=hive_20220728043509_fc2c0d91-bf9a-4452-98c3-b6d4f7ddf176): SELECT id_viagem,sum(valor) as valor_viagem FROM bdm.2021_passagem GROUP BY id_viagem ORDER BY sum(valor) DESC LIMIT 10
+INFO  : Query ID = hive_20220728043509_fc2c0d91-bf9a-4452-98c3-b6d4f7ddf176
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20220728043509_fc2c0d91-bf9a-4452-98c3-b6d4f7ddf176
+INFO  : Tez session hasn't been created yet. Opening session
+INFO  : Dag name: SELECT id_viagem,sum(valor) as valor_vi...10 (Stage-1)
+INFO  : Status: Running (Executing on YARN cluster with App id application_1658966746810_0007)
+
+----------------------------------------------------------------------------------------------
+        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+----------------------------------------------------------------------------------------------
+Map 1 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Reducer 2 ...... container     SUCCEEDED      2          2        0        0       0       0  
+Reducer 3 ...... container     SUCCEEDED      1          1        0        0       0       0  
+----------------------------------------------------------------------------------------------
+VERTICES: 03/03  [==========================>>] 100%  ELAPSED TIME: 8.74 s     
+----------------------------------------------------------------------------------------------
+INFO  : Status: DAG finished successfully in 8.68 seconds
+INFO  : 
+INFO  : Query Execution Summary
+INFO  : ----------------------------------------------------------------------------------------------
+INFO  : OPERATION                            DURATION
+INFO  : ----------------------------------------------------------------------------------------------
+INFO  : Compile Query                           0.41s
+INFO  : Prepare Plan                            5.11s
+INFO  : Get Query Coordinator (AM)              0.00s
+INFO  : Submit Plan                             0.46s
+INFO  : Start DAG                               1.15s
+INFO  : Run DAG                                 8.68s
+INFO  : ----------------------------------------------------------------------------------------------
+INFO  : 
+INFO  : Task Execution Summary
+INFO  : ----------------------------------------------------------------------------------------------
+INFO  :   VERTICES      DURATION(ms)   CPU_TIME(ms)    GC_TIME(ms)   INPUT_RECORDS   OUTPUT_RECORDS
+INFO  : ----------------------------------------------------------------------------------------------
+INFO  :      Map 1           3065.00          6,480            203         149,053           79,624
+INFO  :  Reducer 2           3108.00          4,800            192          79,624               20
+INFO  :  Reducer 3           2461.00          1,090             13              20                0
+INFO  : ----------------------------------------------------------------------------------------------
+INFO  : 
+INFO  : org.apache.tez.common.counters.DAGCounter:
+INFO  :    NUM_SUCCEEDED_TASKS: 4
+INFO  :    TOTAL_LAUNCHED_TASKS: 4
+INFO  :    AM_CPU_MILLISECONDS: 4070
+INFO  :    AM_GC_TIME_MILLIS: 18
+INFO  : File System Counters:
+INFO  :    FILE_BYTES_READ: 768150
+INFO  :    FILE_BYTES_WRITTEN: 746441
+INFO  :    HDFS_BYTES_READ: 706740
+INFO  :    HDFS_BYTES_WRITTEN: 439
+INFO  :    HDFS_READ_OPS: 7
+INFO  :    HDFS_WRITE_OPS: 2
+INFO  :    HDFS_OP_CREATE: 1
+INFO  :    HDFS_OP_GET_FILE_STATUS: 3
+INFO  :    HDFS_OP_OPEN: 4
+INFO  :    HDFS_OP_RENAME: 1
+INFO  : org.apache.tez.common.counters.TaskCounter:
+INFO  :    REDUCE_INPUT_GROUPS: 79640
+INFO  :    REDUCE_INPUT_RECORDS: 79644
+INFO  :    COMBINE_INPUT_RECORDS: 0
+INFO  :    SPILLED_RECORDS: 159288
+INFO  :    NUM_SHUFFLED_INPUTS: 4
+INFO  :    NUM_SKIPPED_INPUTS: 0
+INFO  :    NUM_FAILED_SHUFFLE_INPUTS: 0
+INFO  :    MERGED_MAP_OUTPUTS: 4
+INFO  :    GC_TIME_MILLIS: 408
+INFO  :    TASK_DURATION_MILLIS: 7896
+INFO  :    CPU_MILLISECONDS: 12370
+INFO  :    PHYSICAL_MEMORY_BYTES: 2167406592
+INFO  :    VIRTUAL_MEMORY_BYTES: 10662703104
+INFO  :    COMMITTED_HEAP_BYTES: 2167406592
+INFO  :    INPUT_RECORDS_PROCESSED: 147
+INFO  :    INPUT_SPLIT_LENGTH_BYTES: 1993146
+INFO  :    OUTPUT_RECORDS: 79644
+INFO  :    OUTPUT_LARGE_RECORDS: 0
+INFO  :    OUTPUT_BYTES: 1194680
+INFO  :    OUTPUT_BYTES_WITH_OVERHEAD: 1353972
+INFO  :    OUTPUT_BYTES_PHYSICAL: 746321
+INFO  :    ADDITIONAL_SPILLS_BYTES_WRITTEN: 0
+INFO  :    ADDITIONAL_SPILLS_BYTES_READ: 746321
+INFO  :    ADDITIONAL_SPILL_COUNT: 0
+INFO  :    SHUFFLE_CHUNK_COUNT: 3
+INFO  :    SHUFFLE_BYTES: 746321
+INFO  :    SHUFFLE_BYTES_DECOMPRESSED: 1353972
+INFO  :    SHUFFLE_BYTES_TO_MEM: 0
+INFO  :    SHUFFLE_BYTES_TO_DISK: 0
+INFO  :    SHUFFLE_BYTES_DISK_DIRECT: 746321
+INFO  :    NUM_MEM_TO_DISK_MERGES: 0
+INFO  :    NUM_DISK_TO_DISK_MERGES: 0
+INFO  :    SHUFFLE_PHASE_TIME: 2236
+INFO  :    MERGE_PHASE_TIME: 2347
+INFO  :    FIRST_EVENT_RECEIVED: 197
+INFO  :    LAST_EVENT_RECEIVED: 2115
+INFO  : HIVE:
+INFO  :    CREATED_FILES: 1
+INFO  :    DESERIALIZE_ERRORS: 0
+INFO  :    RECORDS_IN_Map_1: 149053
+INFO  :    RECORDS_OUT_0: 10
+INFO  :    RECORDS_OUT_INTERMEDIATE_Map_1: 79624
+INFO  :    RECORDS_OUT_INTERMEDIATE_Reducer_2: 20
+INFO  :    RECORDS_OUT_INTERMEDIATE_Reducer_3: 0
+INFO  :    RECORDS_OUT_OPERATOR_FS_19: 10
+INFO  :    RECORDS_OUT_OPERATOR_GBY_12: 79624
+INFO  :    RECORDS_OUT_OPERATOR_GBY_14: 79624
+INFO  :    RECORDS_OUT_OPERATOR_LIM_18: 10
+INFO  :    RECORDS_OUT_OPERATOR_MAP_0: 0
+INFO  :    RECORDS_OUT_OPERATOR_RS_13: 79624
+INFO  :    RECORDS_OUT_OPERATOR_RS_16: 20
+INFO  :    RECORDS_OUT_OPERATOR_SEL_11: 149053
+INFO  :    RECORDS_OUT_OPERATOR_SEL_15: 79624
+INFO  :    RECORDS_OUT_OPERATOR_SEL_17: 20
+INFO  :    RECORDS_OUT_OPERATOR_TS_0: 149053
+INFO  : Shuffle Errors:
+INFO  :    BAD_ID: 0
+INFO  :    CONNECTION: 0
+INFO  :    IO_ERROR: 0
+INFO  :    WRONG_LENGTH: 0
+INFO  :    WRONG_MAP: 0
+INFO  :    WRONG_REDUCE: 0
+INFO  : Shuffle Errors_Reducer_2_INPUT_Map_1:
+INFO  :    BAD_ID: 0
+INFO  :    CONNECTION: 0
+INFO  :    IO_ERROR: 0
+INFO  :    WRONG_LENGTH: 0
+INFO  :    WRONG_MAP: 0
+INFO  :    WRONG_REDUCE: 0
+INFO  : Shuffle Errors_Reducer_3_INPUT_Reducer_2:
+INFO  :    BAD_ID: 0
+INFO  :    CONNECTION: 0
+INFO  :    IO_ERROR: 0
+INFO  :    WRONG_LENGTH: 0
+INFO  :    WRONG_MAP: 0
+INFO  :    WRONG_REDUCE: 0
+INFO  : TaskCounter_Map_1_INPUT_2021_passagem:
+INFO  :    INPUT_RECORDS_PROCESSED: 147
+INFO  :    INPUT_SPLIT_LENGTH_BYTES: 1993146
+INFO  : TaskCounter_Map_1_OUTPUT_Reducer_2:
+INFO  :    ADDITIONAL_SPILLS_BYTES_READ: 0
+INFO  :    ADDITIONAL_SPILLS_BYTES_WRITTEN: 0
+INFO  :    ADDITIONAL_SPILL_COUNT: 0
+INFO  :    OUTPUT_BYTES: 1194360
+INFO  :    OUTPUT_BYTES_PHYSICAL: 745980
+INFO  :    OUTPUT_BYTES_WITH_OVERHEAD: 1353620
+INFO  :    OUTPUT_LARGE_RECORDS: 0
+INFO  :    OUTPUT_RECORDS: 79624
+INFO  :    SHUFFLE_CHUNK_COUNT: 1
+INFO  :    SPILLED_RECORDS: 79624
+INFO  : TaskCounter_Reducer_2_INPUT_Map_1:
+INFO  :    ADDITIONAL_SPILLS_BYTES_READ: 745980
+INFO  :    ADDITIONAL_SPILLS_BYTES_WRITTEN: 0
+INFO  :    COMBINE_INPUT_RECORDS: 0
+INFO  :    FIRST_EVENT_RECEIVED: 106
+INFO  :    LAST_EVENT_RECEIVED: 106
+INFO  :    MERGED_MAP_OUTPUTS: 2
+INFO  :    MERGE_PHASE_TIME: 289
+INFO  :    NUM_DISK_TO_DISK_MERGES: 0
+INFO  :    NUM_FAILED_SHUFFLE_INPUTS: 0
+INFO  :    NUM_MEM_TO_DISK_MERGES: 0
+INFO  :    NUM_SHUFFLED_INPUTS: 2
+INFO  :    NUM_SKIPPED_INPUTS: 0
+INFO  :    REDUCE_INPUT_GROUPS: 79624
+INFO  :    REDUCE_INPUT_RECORDS: 79624
+INFO  :    SHUFFLE_BYTES: 745980
+INFO  :    SHUFFLE_BYTES_DECOMPRESSED: 1353620
+INFO  :    SHUFFLE_BYTES_DISK_DIRECT: 745980
+INFO  :    SHUFFLE_BYTES_TO_DISK: 0
+INFO  :    SHUFFLE_BYTES_TO_MEM: 0
+INFO  :    SHUFFLE_PHASE_TIME: 191
+INFO  :    SPILLED_RECORDS: 79624
+INFO  : TaskCounter_Reducer_2_OUTPUT_Reducer_3:
+INFO  :    ADDITIONAL_SPILLS_BYTES_READ: 0
+INFO  :    ADDITIONAL_SPILLS_BYTES_WRITTEN: 0
+INFO  :    ADDITIONAL_SPILL_COUNT: 0
+INFO  :    OUTPUT_BYTES: 320
+INFO  :    OUTPUT_BYTES_PHYSICAL: 341
+INFO  :    OUTPUT_BYTES_WITH_OVERHEAD: 352
+INFO  :    OUTPUT_LARGE_RECORDS: 0
+INFO  :    OUTPUT_RECORDS: 20
+INFO  :    SHUFFLE_CHUNK_COUNT: 2
+INFO  :    SPILLED_RECORDS: 20
+INFO  : TaskCounter_Reducer_3_INPUT_Reducer_2:
+INFO  :    ADDITIONAL_SPILLS_BYTES_READ: 341
+INFO  :    ADDITIONAL_SPILLS_BYTES_WRITTEN: 0
+INFO  :    COMBINE_INPUT_RECORDS: 0
+INFO  :    FIRST_EVENT_RECEIVED: 91
+INFO  :    LAST_EVENT_RECEIVED: 2009
+INFO  :    MERGED_MAP_OUTPUTS: 2
+INFO  :    MERGE_PHASE_TIME: 2058
+INFO  :    NUM_DISK_TO_DISK_MERGES: 0
+INFO  :    NUM_FAILED_SHUFFLE_INPUTS: 0
+INFO  :    NUM_MEM_TO_DISK_MERGES: 0
+INFO  :    NUM_SHUFFLED_INPUTS: 2
+INFO  :    NUM_SKIPPED_INPUTS: 0
+INFO  :    REDUCE_INPUT_GROUPS: 16
+INFO  :    REDUCE_INPUT_RECORDS: 20
+INFO  :    SHUFFLE_BYTES: 341
+INFO  :    SHUFFLE_BYTES_DECOMPRESSED: 352
+INFO  :    SHUFFLE_BYTES_DISK_DIRECT: 341
+INFO  :    SHUFFLE_BYTES_TO_DISK: 0
+INFO  :    SHUFFLE_BYTES_TO_MEM: 0
+INFO  :    SHUFFLE_PHASE_TIME: 2045
+INFO  :    SPILLED_RECORDS: 20
+INFO  : TaskCounter_Reducer_3_OUTPUT_out_Reducer_3:
+INFO  :    OUTPUT_RECORDS: 0
+INFO  : org.apache.hadoop.hive.ql.exec.tez.HiveInputCounters:
+INFO  :    GROUPED_INPUT_SPLITS_Map_1: 1
+INFO  :    INPUT_DIRECTORIES_Map_1: 1
+INFO  :    INPUT_FILES_Map_1: 2
+INFO  :    RAW_INPUT_SPLITS_Map_1: 2
+INFO  : Completed executing command(queryId=hive_20220728043509_fc2c0d91-bf9a-4452-98c3-b6d4f7ddf176); Time taken: 15.375 seconds
+INFO  : OK
++-------------+---------------------+
+|  id_viagem  |    valor_viagem     |
++-------------+---------------------+
+| 17291063    | 44501.380000000005  |
+| 2021000239  | 42111.5             |
+| 17508780    | 37415.170000000006  |
+| 2021000225  | 36852.55            |
+| 17278446    | 36152.619999999995  |
+| 17540102    | 35475.36            |
+| 17657806    | 35284.740000000005  |
+| 17474457    | 34467.90000000001   |
+| 17766511    | 33483.93            |
+| 17491176    | 33477.45            |
++-------------+---------------------+
+10 rows selected (15.989 seconds)
+Beeline version 3.1.0.3.0.1.0-187 by Apache Hive
+Closing: 0: jdbc:hive2://sandbox-hdp.hortonworks.com:2181/default;password=hive;serviceDiscoveryMode=zooKeeper;user=hive;zooKeeperNamespace=hiveserver2
+[root@sandbox-hdp ~]# 
+
+
+
+[root@sandbox-hdp data]# 
+[root@sandbox-hdp data]# 
+[root@sandbox-hdp data]# time hadoop fs -cat /tmp/data/2021_Passagem.csv | ./mapper.5.py | sort | ./reducer.5.py | sort -r -k 2 | head > as_10_viagens_mais_caras.txt
+
+real	0m4.174s
+user	0m4.369s
+sys	0m1.635s
+[root@sandbox-hdp data]# 
+[root@sandbox-hdp data]# 
+[root@sandbox-hdp data]# cat as_10_viagens_mais_caras.txt 
+0000000000017413535	9992.82
+0000000000017619116	9992.18
+0000000000017710481	999.99
+0000000000017710251	999.99
+0000000000017386011	999.99
+0000000000017380719	999.99
+0000000000017728045	999.98
+0000000000017665876	999.98
+0000000000017663615	999.98
+0000000000017659623	999.98
+[root@sandbox-hdp data]# 
+
+
+
+
+[root@sandbox-hdp data]# 
+[root@sandbox-hdp data]# time hadoop jar /usr/hdp/3.0.1.0-187/hadoop-mapreduce/hadoop-streaming-3.1.1.3.0.1.0-187.jar   -input /tmp/data/2021_Passagem.csv   -output /tmp/data/as_10_viagens_mais_caras   -mapper mapper.5.py   -reducer reducer.5.py   -file mapper.5.py   -file reducer.5.py 
+22/07/28 05:56:10 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
+packageJobJar: [mapper.5.py, reducer.5.py] [/usr/hdp/3.0.1.0-187/hadoop-mapreduce/hadoop-streaming-3.1.1.3.0.1.0-187.jar] /tmp/streamjob7431547013013022613.jar tmpDir=null
+22/07/28 05:56:11 INFO client.RMProxy: Connecting to ResourceManager at sandbox-hdp.hortonworks.com/172.18.0.2:8050
+22/07/28 05:56:11 INFO client.AHSProxy: Connecting to Application History server at sandbox-hdp.hortonworks.com/172.18.0.2:10200
+22/07/28 05:56:11 INFO client.RMProxy: Connecting to ResourceManager at sandbox-hdp.hortonworks.com/172.18.0.2:8050
+22/07/28 05:56:11 INFO client.AHSProxy: Connecting to Application History server at sandbox-hdp.hortonworks.com/172.18.0.2:10200
+22/07/28 05:56:11 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /user/root/.staging/job_1658966746810_0009
+22/07/28 05:56:12 INFO mapred.FileInputFormat: Total input files to process : 1
+22/07/28 05:56:12 INFO mapreduce.JobSubmitter: number of splits:2
+22/07/28 05:56:12 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1658966746810_0009
+22/07/28 05:56:12 INFO mapreduce.JobSubmitter: Executing with tokens: []
+22/07/28 05:56:12 INFO conf.Configuration: found resource resource-types.xml at file:/etc/hadoop/3.0.1.0-187/0/resource-types.xml
+22/07/28 05:56:12 INFO impl.YarnClientImpl: Submitted application application_1658966746810_0009
+22/07/28 05:56:12 INFO mapreduce.Job: The url to track the job: http://sandbox-hdp.hortonworks.com:8088/proxy/application_1658966746810_0009/
+22/07/28 05:56:12 INFO mapreduce.Job: Running job: job_1658966746810_0009
+22/07/28 05:56:19 INFO mapreduce.Job: Job job_1658966746810_0009 running in uber mode : false
+22/07/28 05:56:19 INFO mapreduce.Job:  map 0% reduce 0%
+22/07/28 05:56:29 INFO mapreduce.Job:  map 100% reduce 0%
+22/07/28 05:56:36 INFO mapreduce.Job:  map 100% reduce 100%
+22/07/28 05:56:38 INFO mapreduce.Job: Job job_1658966746810_0009 completed successfully
+22/07/28 05:56:38 INFO mapreduce.Job: Counters: 53
+	File System Counters
+		FILE: Number of bytes read=4368831
+		FILE: Number of bytes written=9452489
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=39755689
+		HDFS: Number of bytes written=2201294
+		HDFS: Number of read operations=11
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters 
+		Launched map tasks=2
+		Launched reduce tasks=1
+		Data-local map tasks=2
+		Total time spent by all maps in occupied slots (ms)=58900
+		Total time spent by all reduces in occupied slots (ms)=18468
+		Total time spent by all map tasks (ms)=14725
+		Total time spent by all reduce tasks (ms)=4617
+		Total vcore-milliseconds taken by all map tasks=14725
+		Total vcore-milliseconds taken by all reduce tasks=4617
+		Total megabyte-milliseconds taken by all map tasks=15078400
+		Total megabyte-milliseconds taken by all reduce tasks=4727808
+	Map-Reduce Framework
+		Map input records=149054
+		Map output records=149053
+		Map output bytes=4070719
+		Map output materialized bytes=4368837
+		Input split bytes=236
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=79624
+		Reduce shuffle bytes=4368837
+		Reduce input records=149053
+		Reduce output records=79624
+		Spilled Records=298106
+		Shuffled Maps =2
+		Failed Shuffles=0
+		Merged Map outputs=2
+		GC time elapsed (ms)=287
+		CPU time spent (ms)=6640
+		Physical memory (bytes) snapshot=1735950336
+		Virtual memory (bytes) snapshot=8332726272
+		Total committed heap usage (bytes)=1590165504
+		Peak Map Physical memory (bytes)=768188416
+		Peak Map Virtual memory (bytes)=2844803072
+		Peak Reduce Physical memory (bytes)=208117760
+		Peak Reduce Virtual memory (bytes)=2647097344
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=39755453
+	File Output Format Counters 
+		Bytes Written=2201294
+22/07/28 05:56:38 INFO streaming.StreamJob: Output directory: /tmp/data/as_10_viagens_mais_caras
+
+real	0m29.904s
+user	0m6.812s
+sys	0m0.943s
+[root@sandbox-hdp data]# 
+
+
